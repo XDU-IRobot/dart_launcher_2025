@@ -48,6 +48,8 @@
 osThreadId AttitudeTaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
+osThreadId Launch_TaskHandle;
+osThreadId Rc_TaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -55,6 +57,8 @@ osThreadId defaultTaskHandle;
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
+void Start_Launch(void const * argument);
+void rc_task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -105,6 +109,14 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
+  /* definition and creation of Launch_Task */
+  osThreadDef(Launch_Task, Start_Launch, osPriorityHigh, 0, 1024);
+  Launch_TaskHandle = osThreadCreate(osThread(Launch_Task), NULL);
+
+  /* definition and creation of Rc_Task */
+  osThreadDef(Rc_Task, rc_task, osPriorityHigh, 0, 512);
+  Rc_TaskHandle = osThreadCreate(osThread(Rc_Task), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   osThreadDef(attitudeTask, AttitudeTask, osPriorityNormal, 0, 1024);
@@ -129,6 +141,42 @@ void StartDefaultTask(void const * argument)
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
+}
+
+/* USER CODE BEGIN Header_Start_Launch */
+/**
+* @brief Function implementing the Launch_Task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Start_Launch */
+__weak void Start_Launch(void const * argument)
+{
+  /* USER CODE BEGIN Start_Launch */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Start_Launch */
+}
+
+/* USER CODE BEGIN Header_rc_task */
+/**
+* @brief Function implementing the Rc_Task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_rc_task */
+__weak void rc_task(void const * argument)
+{
+  /* USER CODE BEGIN rc_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END rc_task */
 }
 
 /* Private application code --------------------------------------------------*/

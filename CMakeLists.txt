@@ -41,6 +41,8 @@ add_subdirectory(cmake/stm32cubemx)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(libs)
 add_subdirectory(openocd)
+add_subdirectory(task)
+add_subdirectory(remotecontrol)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
