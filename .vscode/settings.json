@@ -74,6 +74,11 @@
         "errno.h": "c",
         "stack_macros.h": "c",
         "timers.h": "c",
-        "tim.h": "c"
+        "tim.h": "c",
+        "usart.h": "c",
+        "stdio.h": "c",
+        "string.h": "c",
+        "spi.h": "c",
+        "stm32f4xx_hal.h": "c"
     }
 }

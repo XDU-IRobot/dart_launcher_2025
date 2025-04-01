@@ -10,6 +10,14 @@ extern void Start_Launch();
 #ifdef __cplusplus
 }
 
+#include "librm.hpp"
+
+#include <iostream>
+#include "librm/core/typedefs.h"
+
+using rm::device::CanDevice;
+using rm::hal::Can;
+
 #define LEFT_CHANNEL 1
 #define RIGHT_CHANNEL 0
 #define RC_SW_UP                ((uint16_t)1)
@@ -76,7 +84,8 @@ typedef enum
 {
   CIRCLE_LOAD_STOP=1,
   CIRCLE_LOAD_CLOCKWISE=2,
-  CIRCLE_LOAD_ANTICLOCKWISE=3
+  CIRCLE_LOAD_ANTICLOCKWISE=3,
+  CIRCLE_LOAD_TEST=4
 }Circle_load_state;
 
 typedef enum
@@ -106,7 +115,7 @@ typedef enum
     BOTTOM_STOP=1,
 	BOTTOM_DOWN=2,
 	BOTTOM_UP=3,
-	BOTTOM_UP_LITTLE=4
+	BOTTOM_DOWN_LITTLE=4
 }Bottom_state;
 
 
@@ -114,8 +123,18 @@ typedef enum
 {
 	LAUNCH_CLOSE=1,
 	LAUNCH_OPEN=2,
+	LAUNCH_STOP=3
 	
 }Launch_state;
+
+typedef enum
+{
+	HOOK_STOP=1,
+	HOOK_CLOCKWISE=2,
+	HOOK_ANTICLOCKWISE=3
+}Hook_state;
+
+
 
 
 
@@ -128,9 +147,12 @@ typedef struct
 	uint8_t Circle_load_state;			
 	uint8_t Load_PWM_state;				
 	uint8_t Launch_state;
+	uint8_t Hook_state;
+	
    
 	uint8_t Bottom_3508_state;    
-	uint16_t Bottom_3508_Peristent;  
+	uint16_t Bottom_3508_Peristent; 
+	 
 	uint16_t Bottom_3508_Time_State; 
 	
 	uint16_t Bottom_3508_block_time; 
@@ -177,6 +199,34 @@ void Circle_load_control(Dart_t *dart);
 void Load_control(Dart_t *dart);
 void Bottom_control(Dart_t *dart);
 void Load_PWM_control(Dart_t *dart);
+void Hook_control(Dart_t *dart);
+namespace rm::device{
+class EncoderDevice : public CanDevice {
+	public:
+	  EncoderDevice(rm::hal::CanInterface &can, uint32_t rx_std_id)
+		  : CanDevice{can, rx_std_id} {}
+		
+	  /** 取值函数 **/
+  	[[nodiscard]] int16_t angle() const { return this->angle_; }
+  	[[nodiscard]] int16_t loops() const { return this->loops_; }
+  	[[nodiscard]] int16_t angular_velocity() const { return this->angular_velocity_; }
+
+  	[[nodiscard]] float Angle() const { return (float)this->angle() * 360.f/32768.0f; }
+	private:
+	  void RxCallback(const rm::hal::CanMsg *msg) override {
+		// 在这里处理接收到的报文
+		this->angle_ = (int16_t)(msg->data[3] << 8) | msg->data[2];
+ 		this->loops_  = (int16_t)(msg->data[5] << 8) | msg->data[4];
+  		this->angular_velocity_ = (int16_t)(msg->data[7] << 8) | msg->data[6];
+		
+	  }
+  /**   FEEDBACK DATA   **/
+  	 int16_t angle_{};    
+  	 int16_t loops_{};        
+ 	 int16_t angular_velocity_{};    
+ 	
+	};
+} // namespace rm::device
 #endif
 
 #endif /* LAUNCH_TASK_H */
