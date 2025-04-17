@@ -26,7 +26,7 @@ add_custom_target(erase
 #####################################
 
 add_custom_target(download
-    openocd ${OPENOCD_CFG_OPT} -c "program ${CMAKE_PROJECT_NAME}.elf verify reset exit"
+    openocd ${OPENOCD_CFG_OPT} -c "program ${CMAKE_SOURCE_DIR}/build/Debug/${CMAKE_PROJECT_NAME}.elf verify reset exit"
     DEPENDS ${CMAKE_PROJECT_NAME}.elf
-    COMMENT "Flashing ${PROJ_NAME}.elf to target"
+    COMMENT "Flashing ${CMAKE_SOURCE_DIR}/build/Debug/${CMAKE_PROJECT_NAME}.elf to target"
 )
