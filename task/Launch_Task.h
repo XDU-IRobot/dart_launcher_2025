@@ -99,7 +99,7 @@ typedef enum
 	YAW_STOP=1,
 	YAW_LEFT=2,
 	YAW_RIGHT=3,
-	YAW_MATCH = 6
+	YAW_MATCH = 4
 }Yaw_state;
 
 typedef enum
@@ -123,7 +123,9 @@ typedef enum
 {
 	LAUNCH_CLOSE=1,
 	LAUNCH_OPEN=2,
-	LAUNCH_STOP=3
+	LAUNCH_STOP=3,
+	LAUNCH_CLOSE_MATCH=4,
+	LAUNCH_OPEN_MATCH=5
 	
 }Launch_state;
 
@@ -131,7 +133,9 @@ typedef enum
 {
 	HOOK_STOP=1,
 	HOOK_CLOCKWISE=2,
-	HOOK_ANTICLOCKWISE=3
+	HOOK_ANTICLOCKWISE=3,
+	HOOK_MATCH_UP=4,
+	HOOK_MATCH_DOWN=5
 }Hook_state;
 
 
@@ -156,6 +160,8 @@ typedef struct
 	uint16_t Bottom_3508_Time_State; 
 	
 	uint16_t Bottom_3508_block_time; 
+
+	uint16_t Load_Time_State;
 }Work_Mode_t;
 typedef struct
 {
@@ -173,23 +179,57 @@ typedef struct
 
 typedef struct
 {
+	float Yaw_Angle;
+	float Pitch_Angle;
+}Angle_TarGet;
+
+typedef struct
+{
 	uint8_t					Control_mode; 					
 	Work_Mode				Mode;													
 	uint8_t                 Match_state;
+	Angle_TarGet			Angle_Target;
 }Dart_t;
 
 typedef struct
 {
-	float Yaw_Angle;
-	float Pitch_Angle;
-}Angle_TarGet;
+	float Yaw_Change;
+	float Pitch_Change;
+}Dart_Change;
+
+Dart_Change dart_change[4];
+
+typedef struct __attribute__((packed)) {
+    // 包头
+    uint8_t _SOF;
+    uint8_t ID;
+    // 自瞄状态
+    uint8_t AimbotState;
+    uint8_t AimbotTarget;
+    // 自瞄数据
+    float Pitch;
+    float Yaw;
+    // 自瞄目标角速度
+    float TargetPitchSpeed;
+    float TargetYawSpeed;
+    // 时间戳
+    float SystemTimer;
+    // 包尾
+    uint8_t _EOF;
+    // 处理后数据
+    float PitchRelativeAngle;
+    float YawRelativeAngle;
+    uint8_t Aimbot_Shoot_Flag;
+  } AimbotFrame_SCM_t;
+
+
 
 void Launch_State_Init(Dart_t *dart);
 void Launch_Init();
 void Mode_Judgement(Dart_t *dart);
 void Hit_target(Dart_t *dart);
 void All_States_Init(Dart_t *dart);
-void Begin_Test_Launch();
+void Begin_Launch();
 void Normal_Mode_Change(Dart_t *dart);
 void Match_Mode_Change(Dart_t *dart);
 void Pitch_control(Dart_t *dart);
@@ -200,6 +240,7 @@ void Load_control(Dart_t *dart);
 void Bottom_control(Dart_t *dart);
 void Load_PWM_control(Dart_t *dart);
 void Hook_control(Dart_t *dart);
+void UsbReceive(uint8_t *rx_data, uint8_t len);
 namespace rm::device{
 class EncoderDevice : public CanDevice {
 	public:

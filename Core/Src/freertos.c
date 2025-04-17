@@ -153,11 +153,11 @@ void StartDefaultTask(void const * argument)
 __weak void Start_Launch(void const * argument)
 {
   /* USER CODE BEGIN Start_Launch */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+//   /* Infinite loop */
+//   for(;;)
+//   {
+//     osDelay(1);
+//   }
   /* USER CODE END Start_Launch */
 }
 

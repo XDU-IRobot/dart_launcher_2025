@@ -79,6 +79,25 @@
         "stdio.h": "c",
         "string.h": "c",
         "spi.h": "c",
-        "stm32f4xx_hal.h": "c"
+        "stm32f4xx_hal.h": "c",
+        "usb_device.h": "c",
+        "usbd_cdc.h": "c",
+        "usbd_cdc_if.h": "c",
+        "iostream": "cpp",
+        "span": "cpp",
+        "stm32f4xx.h": "c",
+        "launch_task.h": "c",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "condition_variable": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "ratio": "cpp",
+        "future": "cpp",
+        "mutex": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "stm32f4xx_hal_def.h": "c"
     }
 }

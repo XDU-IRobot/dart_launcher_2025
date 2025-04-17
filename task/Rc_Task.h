@@ -88,6 +88,9 @@
 #define YAW_MOTOR_ANGLE_MAX_OUT  3000
 #define YAW_MOTOR_ANGLE_MAX_IOUT 3000
 
+#define Initial_Pitch 300.0
+#define Initial_Yaw 300.0
+
 #define CIRCLE_ANGLE                360.0f
 #define ANGLE_ENCODER_MEASURE_MAX   32768.0f
 
